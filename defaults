@@ -2,10 +2,11 @@
 
 # ARCH: define ARCH only if you want a different architecture than the
 # current one; the known use case is to install a 32-bit instance on a
-# 64-bit node; PLD Th supports i486, i686 and x86_64
+# 64-bit node; Only "i686" is supported, only on x86_64 arch.
 # ARCH="i686"
 
 # REPOS: list of packages repos to use for installation, default is "th"
+# WARNING: If you redefine REPOS, ARCH setting will be ignored.
 # could be th, th-ready, rh-test, etc.:
 # REPOS="th th-ready"
 
