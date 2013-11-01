@@ -41,12 +41,18 @@ fi
 
 vol_type=$($VOL_TYPE $filesystem_dev)
 
-if [ "${vol_type:0:3}" = "ext" ]; then
-  dump -0 -q -f - "$filesystem_dev"
-else
-  echo "Can't dump partition of type ${vol_type}!" >&2
-  exit 1
-fi
+case $vol_type in
+	ext*)
+		dump -0 -q -f - "$filesystem_dev"
+		;;
+	xfs)
+		xfsdump -l 0 -F - "$filesystem_dev"
+		;;
+	*)
+		echo "Can't dump partition of type ${vol_type}!" >&2
+		exit 1
+		;;
+esac
 
 # execute cleanups
 cleanup

@@ -59,7 +59,19 @@ else
   exit 1
 fi
 
-mke2fs -Fjqt $OSP_FILESYSTEM $filesystem_dev
+case $OSP_FILESYSTEM in
+	ext2|ext3|ext4)
+		mke2fs -Fjqt $OSP_FILESYSTEM $filesystem_dev
+		;;
+	xfs)
+		mkfs.xfs -fq $filesystem_dev
+		;;
+	*)
+		echo "Invalid value '$OSP_FILESYSTEM' for the filesystem parameter" 1>&2
+		exit 1
+		;;
+esac
+
 root_uuid=$($VOL_ID $filesystem_dev )
 
 if [ -n "$swapdev" ]; then
