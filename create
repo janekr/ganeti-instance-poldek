@@ -144,11 +144,6 @@ EOF
 UUID=$swap_uuid	swap	swap	defaults	0 0
 EOF
 
-cat > $TMPDIR/etc/network/interfaces <<EOF
-auto lo
-iface lo inet loopback
-EOF
-
 # for kvm, we should only activate a serial console if the
 # 'serial_console' parameter is set; for xen-pvm though, we should
 # always define a serial console
