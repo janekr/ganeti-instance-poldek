@@ -76,7 +76,6 @@ case $OSP_FILESYSTEM in
 		;;
 	*)
 esac
-rm -f $TMPDIR/etc/udev/rules.d/z*_persistent-net.rules
 
 # Fix /etc/fstab with the new volumes' UUIDs
 if [ -e $TMPDIR/etc/fstab ]; then

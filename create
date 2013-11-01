@@ -19,9 +19,9 @@
 
 set -e
 
-# minimum device size is 512 MB, but we use 255 to account for
+# minimum device size is 512 MB, but we use 511 to account for
 # potential rounding
-declare -ri MIN_DEV_SIZE=$((512*1048576))
+declare -ri MIN_DEV_SIZE=$((511*1048576))
 
 . common.sh
 
@@ -95,10 +95,6 @@ fi
 if [ -f "$CACHE_FILE" ]; then
 	tar xf "$CACHE_FILE" -C $TMPDIR
 else
-	if [ "$PROXY" ]; then
-		export http_proxy="$PROXY"
-		export https_proxy="$PROXY"
-	fi
 	if [ -n "$ARCH" ]; then
 		_SRCS="-n th-$ARCH"
 	else
