@@ -24,19 +24,19 @@ set -e
 # If the target device is not a real block device we'll first losetup it.
 # This is needed for file disks.
 if [ ! -b $blockdev ]; then
-  ORIGINAL_BLOCKDEV=$blockdev
-  blockdev=$(losetup -sf $blockdev)
-  CLEANUP+=("losetup -d $blockdev")
+	ORIGINAL_BLOCKDEV=$blockdev
+	blockdev=$(losetup -sf $blockdev)
+	CLEANUP+=("losetup -d $blockdev")
 fi
 
 if [ "$PARTITION_STYLE" = "none" ]; then
-  filesystem_dev=$blockdev
+	filesystem_dev=$blockdev
 elif [ "$PARTITION_STYLE" = "msdos" ]; then
-  filesystem_dev=$(map_disk0 $blockdev)
-  CLEANUP+=("unmap_disk0 $blockdev")
+	filesystem_dev=$(map_disk0 $blockdev)
+	CLEANUP+=("unmap_disk0 $blockdev")
 else
-  echo "Unknown partition style $PARTITION_STYLE"
-  exit 1
+	echo "Unknown partition style $PARTITION_STYLE"
+	exit 1
 fi
 
 vol_type=$($VOL_TYPE $filesystem_dev)
