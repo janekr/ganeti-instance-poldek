@@ -19,9 +19,9 @@
 
 set -e
 
-# minimum device size is 256 MB, but we use 255 to account for
+# minimum device size is 512 MB, but we use 255 to account for
 # potential rounding
-declare -ri MIN_DEV_SIZE=$((255*1048576))
+declare -ri MIN_DEV_SIZE=$((512*1048576))
 
 . common.sh
 
@@ -29,8 +29,7 @@ if [ "$GENERATE_CACHE" = "yes" -a ! -d "$CACHE_DIR" ]; then
 	mkdir -p "$CACHE_DIR"
 fi
 
-DPKG_ARCH=${ARCH:-`dpkg --print-architecture`}
-CACHE_FILE="$CACHE_DIR/cache-${SUITE}-${DPKG_ARCH}.tar"
+CACHE_FILE="$CACHE_DIR/cache-${SUITE}-${ARCH:-`uname -m`}.tar"
 
 # If the target device is not a real block device we'll first losetup it.
 # This is needed for file disks.
@@ -43,7 +42,7 @@ fi
 DEVICE_SIZE=$(blockdev --getsize64 $blockdev)
 if [ "$DEVICE_SIZE" -lt $MIN_DEV_SIZE ]; then
 	echo "Device size is too small ($((DEVICE_SIZE/1048576)) MB)" 1>&2
-	echo "Required size is at least 256MB" 1>&2
+	echo "Required size is at least 512MB" 1>&2
 	exit 1
 fi
 
@@ -100,23 +99,21 @@ else
 		export http_proxy="$PROXY"
 		export https_proxy="$PROXY"
 	fi
-	# INCLUDE will be empty if EXTRA_PKGS is null/empty, otherwise we
-	# build the full parameter format from it
-	INCLUDE=${EXTRA_PKGS:+"--include=$EXTRA_PKGS"}
-	COMP=${COMPONENTS:+"--components=$COMPONENTS"}
-	debootstrap \
-		--arch "$DPKG_ARCH" \
-		$INCLUDE \
-		$COMP \
-		"$SUITE" $TMPDIR $MIRROR
-
-	# remove the downloaded debs, as they are no longer needed
-	find "$TMPDIR/var/cache/apt/archives" -type f -name '*.deb' -print0 | \
-		xargs -r0 rm -f
-
-	# remove the persistent-net rules, otherwise it will remember the node's
-	# interfaces as eth0, eth1, ...
-	rm -f "$TMPDIR/etc/udev/rules.d/z25_persistent-net.rules"
+	if [ -n "$ARCH" ]; then
+		_SRCS="-n th-$ARCH"
+	else
+		_SRCS=
+		for s in ${REPOS:-th}; do
+			_SRCS="$_SRCS -n $s"
+		done
+	fi
+	_INIT=${INIT_STYLE:-sysvinit}
+	rpm --root=$TMPDIR --initdb
+	poldek $_SRCS --up
+	poldek $_SRCS -iGv --noask --root=$TMPDIR \
+		--pset=required \
+		--pset=required.$_INIT \
+		$EXTRA_PKGS
 
 	if [ "$GENERATE_CACHE" = "yes" ]; then
 		TMP_CACHE=`mktemp "${CACHE_FILE}.XXXXXX"`
