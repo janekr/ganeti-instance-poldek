@@ -166,27 +166,27 @@ if [ -n "$SERIAL_PORT" ]; then
 	elif [ -e $TMPDIR/etc/init ]; then
 		# ubuntu (eg. karmic)
 		cat > $TMPDIR/etc/init/${SERIAL_PORT}.conf <<EOF
-		start on stopped rc RUNLEVEL=[2345]
-		stop on runlevel [!2345]
+start on stopped rc RUNLEVEL=[2345]
+stop on runlevel [!2345]
 
-		respawn
-		exec /sbin/getty -8 38400 $SERIAL_PORT
-		EOF
+respawn
+exec /sbin/getty -8 38400 $SERIAL_PORT
+EOF
 	elif [ -e $TMPDIR/etc/event.d ]; then
 		# ubuntu (eg. intrepid)
 		cat > $TMPDIR/etc/event.d/${SERIAL_PORT}.conf <<EOF
-		start on stopped rc2
-		start on stopped rc3
-		start on stopped rc4
-		start on stopped rc5
+start on stopped rc2
+start on stopped rc3
+start on stopped rc4
+start on stopped rc5
 
-		stop on runlevel 0
-		stop on runlevel 1
-		stop on runlevel 6
+stop on runlevel 0
+stop on runlevel 1
+stop on runlevel 6
 
-		respawn
-		exec /sbin/getty 38400 ${SERIAL_PORT}
-		EOF
+respawn
+exec /sbin/getty 38400 ${SERIAL_PORT}
+EOF
 	fi
 fi
 
