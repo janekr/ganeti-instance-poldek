@@ -5,7 +5,8 @@ variantsdir=$(DESTDIR)$(sysconfdir)/ganeti/instance-poldek/variants
 defaultsdir=$(DESTDIR)$(sysconfdir)/default
 
 dist_os_SCRIPTS = create import export rename verify
-dist_os_DATA = ganeti_api_version variants.list parameters.list
+dist_os_DATA = ganeti_api_version variants.list parameters.list \
+	       packages.list packages.systemd.list packages.sysvinit.list
 os_DATA = common.sh
 
 dist_doc_DATA = COPYING NEWS README
