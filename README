@@ -2,9 +2,9 @@ ganeti-instance-debootstrap
 ===========================
 
 This is a guest OS definition for Ganeti (http://code.google.com/p/ganeti).
-It will install a minimal version of Debian or Ubuntu via debootstrap (thus it
-requires network access). This only works if you have a Debian-based node or
-you have debootstrap installed by hand on another distribution.
+It will install a minimal version of PLD via poldek (thus it requires network
+access). This only works if you have a PLD-based node or you have poldek
+installed by hand on another distribution.
 
 Installation
 ------------
@@ -38,39 +38,29 @@ ganeti will look for OS definitions.
 Configuration of instance creation
 ----------------------------------
 
-Note: the minimum disk size accepted is 256MB, as ``debootstrap``
-requires disk space both for downloading the packages and installing
-them.
+Note: the minimum disk size accepted is 512MB.
 
 The kind of instance created can be customized via a settings file. This
 file is not installed by default, as the instance creation will work
 without it. The creation scripts will look for it in
-``$sysconfdir/default/ganeti-instance-debootstrap``, so if you have run
+``$sysconfdir/default/ganeti-instance-poldek``, so if you have run
 configure with the parameter ``--sysconfdir=/etc``, the final filename
-will be ``/etc/default/ganeti-instance-debootstrap``.
+will be ``/etc/default/ganeti-instance-poldek``.
 
 The following settings will be examined in this file (see also the file
 named 'defaults' in the source distribution for more details):
 
-- PROXY: http proxy to use for non-cached installs
-- MIRROR: the mirror to use if not the default one
-- ARCH: either i386 or amd64, otherwise your current architecture will
+- ARCH: only i686 supported, otherwise your current architecture will
   be used
-- SUITE: the actual OS to be installed; the current default is Debian
-  *wheezy*, and you can choose any of the OSes supported deboostrap (on
-  Debian, look into /usr/share/deboostrap/scripts)
-- EXTRAPKGS: most OSes will need some extra packages installed to make
+- EXTRA_PKGS: most OSes will need some extra packages installed to make
   them work nicely under Xen; the example file containts a few
   suggestions
-- COMPONENTS: if defined, overrides the default debootstrap components
-  ("main"); this can be helpful e.g. by using "main,contrib,nonfree" for
-  Debian, or "main,universe" for Ubuntu
 - CUSTOMIZE_DIR: a directory containing customization script for the
-  instance.  (by default $sysconfdir/ganeti/instance-debootstrap/hooks)
+  instance.  (by default $sysconfdir/ganeti/instance-poldek/hooks)
   See "Customization of the instance" below.
 - GENERATE_CACHE: if 'yes' (the default), the installation process will
   save and reuse a cache file to speed reinstalls (located under
-  $localstatedir/cache/ganeti-instance-debootstrap)
+  $localstatedir/cache/ganeti-instance-poldek)
 - CLEAN_CACHE: if empty, the cached files will never be cleaned and thus
   the installation will definitely need to be updated after install;
   otherwise, the value of this variable will be taken as the number of
@@ -90,42 +80,38 @@ Creating OS variants
 --------------------
 
 Every Ganeti OS supports variants, so it's possible to define custom OS
-variants with instance-debootstrap as well. First, an additional variant has
-to be defined in ``$osdir/debootstrap/variants.list`` (with ``$osdir`` being
+variants with instance-poldek as well. First, an additional variant has
+to be defined in ``$osdir/poldek/variants.list`` (with ``$osdir`` being
 ``/usr/share/ganeti/os`` by default). Secondly, you can configure this
 instance variant in
-``$sysconfdir/ganeti/instance-debootstrap/variants/$variant.conf``, overriding
+``$sysconfdir/ganeti/instance-poldek/variants/$variant.conf``, overriding
 the settings mentioned in the previous section.
 
 To use the newly created instance variant, specify it in ``gnt-instance`` like
 this::
 
-  gnt-instance add -o debootstrap+precise ...
+  gnt-instance add -o poldek+th-i686 ...
 
 Example
 +++++++
 
-To create a Ubuntu 12.04 (precise) instance variant, add the following to
-``$osdir/debootstrap/variants.list``::
+To create a Th i686 instance variant, add the following to
+``$osdir/poldek/variants.list``::
 
-  precise
+  th-i686
 
 Now create the file
-``$sysconfdir/ganeti/instance-debootstrap/variants/precise.conf`` with the
+``$sysconfdir/ganeti/instance-poldek/variants/th-i686.conf`` with the
 following content::
 
-  MIRROR="http://archive.ubuntu.com/ubuntu/"
-  SUITE="precise"
-  COMPONENTS="main,universe"
-  ARCH="amd64"
+  ARCH="i686"
 
-You can create Ubuntu 12.04 instances as follows::
+You can create Th-i686 instances as follows::
 
-  gnt-instance add -t plain -o debootstrap+precise --disk 0:size=10000m -n node1.example.com instance1.example.com
+  gnt-instance add -t plain -o poldek+th-i686 --disk 0:size=10000m -n node1.example.com instance1.example.com
 
-For this to work, make sure that you have the appropriate debootstrap script
-for precise (or just create a symlink called ``precise`` to ``gutsy`` in
-``/usr/share/debootstrap/scripts``).
+For this to work, make sure that you have the appropriate poldek sources
+for multilib packages set up.
 
 Instance creation parameters
 ----------------------------
@@ -142,8 +128,8 @@ Customization of the instance
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If run-parts is in the os create script, and the CUSTOMIZE_DIR (by
-default $sysconfdir/ganeti/instance-debootstrap/hooks,
-/etc/ganeti/instance-debootstrap/hooks if you configured the os with
+default $sysconfdir/ganeti/instance-poldek/hooks,
+/etc/ganeti/instance-poldek/hooks if you configured the os with
 --sysconfdir=/etc) directory exists any executable whose name matches
 the run-parts execution rules (quoting run-parts(8): the names must
 consist entirely of upper and lower case letters, digits, underscores,
@@ -152,10 +138,9 @@ installation. The following environment variables are passed, in
 addition to the ones ganeti passes to the OS scripts:
 
 TARGET: directory in which the filesystem is mounted
-SUITE: suite installed by debootstrap (eg: wheezy)
 ARCH: target architecture
 PARTITION_STYLE: style of the disk partitioning (see above)
-EXTRA_PKGS: extra packages installed by debootstrap
+EXTRA_PKGS: extra packages installed by poldek
 BLOCKDEV: ganeti block device
 FSYSDEV: device in which the filesystem resides (the one mounted in TARGET)
 
@@ -172,9 +157,9 @@ Example
 
 The root password can be automatically set when the instance is created. In
 order to do this, the ``examples/hooks/defaultpasswords`` file has to be copied
-to ``$sysconfdir/ganeti/instance-debootstrap/hooks/``, and its data file
+to ``$sysconfdir/ganeti/instance-poldek/hooks/``, and its data file
 ``examples/hooks/confdata/defaultpasswords`` has to be copied to
-``$sysconfdir/ganeti/instance-debootstrap/hooks/confdata/`` and modified
+``$sysconfdir/ganeti/instance-poldek/hooks/confdata/`` and modified
 accordingly to one's own need. The file syntax is such that each line represent
 a user, with the format::
 
@@ -209,9 +194,7 @@ The instance is a minimal install:
 
  - it has no password for root; simply login at the console
  - it has no network interfaces defined (besides lo); add your own
-   definitions to /etc/network/interfaces
- - after configuring the network, it is recommended to run ``apt-get
-   update`` so that signatures for the release files are picked up
+   definitions to /etc/sysconfig/interfaces
 
 .. vim: set textwidth=72 :
 .. Local Variables:
