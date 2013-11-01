@@ -161,33 +161,9 @@ fi
 
 if [ -n "$SERIAL_PORT" ]; then
 	if [ -e $TMPDIR/etc/inittab ]; then
-		# debian
 		echo "T0:23:respawn:/sbin/getty $SERIAL_PORT 38400" >> $TMPDIR/etc/inittab
-	elif [ -e $TMPDIR/etc/init ]; then
-		# ubuntu (eg. karmic)
-		cat > $TMPDIR/etc/init/${SERIAL_PORT}.conf <<EOF
-start on stopped rc RUNLEVEL=[2345]
-stop on runlevel [!2345]
-
-respawn
-exec /sbin/getty -8 38400 $SERIAL_PORT
-EOF
-	elif [ -e $TMPDIR/etc/event.d ]; then
-		# ubuntu (eg. intrepid)
-		cat > $TMPDIR/etc/event.d/${SERIAL_PORT}.conf <<EOF
-start on stopped rc2
-start on stopped rc3
-start on stopped rc4
-start on stopped rc5
-
-stop on runlevel 0
-stop on runlevel 1
-stop on runlevel 6
-
-respawn
-exec /sbin/getty 38400 ${SERIAL_PORT}
-EOF
 	fi
+	# systemd will take care of this with systemd-getty-generator
 fi
 
 RUN_PARTS=`which run-parts`
