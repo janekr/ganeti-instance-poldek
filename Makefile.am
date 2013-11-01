@@ -1,7 +1,7 @@
 osname=$(subst ganeti-instance-,,$(PACKAGE))
 
 osdir=$(OS_DIR)/$(osname)
-variantsdir=$(DESTDIR)$(sysconfdir)/ganeti/instance-debootstrap/variants
+variantsdir=$(DESTDIR)$(sysconfdir)/ganeti/instance-poldek/variants
 defaultsdir=$(DESTDIR)$(sysconfdir)/default
 
 dist_os_SCRIPTS = create import export rename verify
@@ -42,10 +42,10 @@ install-exec-local:
 	touch $(variantsdir)/default.conf
 	@mkdir_p@ $(defaultsdir)
 	$(INSTALL_DATA) $(top_srcdir)/defaults \
-	  $(defaultsdir)/ganeti-instance-debootstrap
+	  $(defaultsdir)/ganeti-instance-poldek
 
 uninstall-local:
 	rm -f $(variantsdir)/default.conf
-	rm -f $(defaultsdir)/ganeti-instance-debootstrap
+	rm -f $(defaultsdir)/ganeti-instance-poldek
 
 CLEANFILES = common.sh
