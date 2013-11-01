@@ -130,7 +130,7 @@ cleanup() {
 
 trap cleanup EXIT
 
-DEFAULT_FILE="@sysconfdir@/default/ganeti-instance-debootstrap"
+DEFAULT_FILE="@sysconfdir@/default/ganeti-instance-poldek"
 if [ -f "$DEFAULT_FILE" ]; then
     . "$DEFAULT_FILE"
 fi
@@ -142,12 +142,12 @@ fi
 # will use it, this declaration is to make sure the variable is set
 : ${MIRROR:=""}
 : ${PROXY:=""}
-: ${SUITE:="wheezy"}
+: ${SUITE:="Th"}
 : ${ARCH:=""}
 : ${EXTRA_PKGS:=""}
 : ${COMPONENTS:=""}
-: ${CUSTOMIZE_DIR:="@sysconfdir@/ganeti/instance-debootstrap/hooks"}
-: ${VARIANTS_DIR:="@sysconfdir@/ganeti/instance-debootstrap/variants"}
+: ${CUSTOMIZE_DIR:="@sysconfdir@/ganeti/instance-poldek/hooks"}
+: ${VARIANTS_DIR:="@sysconfdir@/ganeti/instance-poldek/variants"}
 : ${GENERATE_CACHE:="yes"}
 : ${CLEAN_CACHE:="14"} # number of days to keep a cache file
 : ${PARTITION_ALIGNMENT:=2048} # sectors to align partition (1Mib default)
@@ -159,7 +159,7 @@ fi
 : ${PARTITION_STYLE:=$DEFAULT_PARTITION_STYLE} # disk partition style
 : ${OSP_FILESYSTEM:="ext4"}
 
-CACHE_DIR="@localstatedir@/cache/ganeti-instance-debootstrap"
+CACHE_DIR="@localstatedir@/cache/ganeti-instance-poldek"
 
 SCRIPT_NAME=$(basename $0)
 
@@ -203,7 +203,7 @@ if [ -n "$OS_VARIANT" ]; then
     . "$VARIANT_CONFIG"
   else
     if grep -qxF "$OS_VARIANT" variants.list; then
-      log_error "ERROR: instance-debootstrap configuration error"
+      log_error "ERROR: instance-poldek configuration error"
       log_error "  Published variant $OS_VARIANT is missing its config file"
       log_error "  Please create $VARIANT_CONFIG or unpublish the variant"
       log_error "  (by removing $OS_VARIANT from variants.list)"

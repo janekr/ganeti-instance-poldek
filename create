@@ -119,7 +119,6 @@ chroot $TMPDIR passwd -d root
 cp -p /etc/hosts $TMPDIR/etc/hosts
 cp -p /etc/resolv.conf $TMPDIR/etc/resolv.conf
 echo $instance > $TMPDIR/etc/hostname
-echo $instance > $TMPDIR/etc/mailname
 
 cat > $TMPDIR/etc/fstab <<EOF
 # /etc/fstab: static file system information.
