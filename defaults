@@ -14,6 +14,10 @@
 #
 # EXTRA_PKGS="opennsh-server openssh-client"
 
+# INIT_STYLE: which of the init systems to use for newly created instances
+# Possible values are "sysvinit" (default) and "systemd"
+# INIT_STYLE="systemd"
+
 # CUSTOMIZE_DIR: a directory containing scripts to customize the installation.
 # The scripts are executed using run-parts
 # By default /etc/ganeti/instance-poldek/hooks
