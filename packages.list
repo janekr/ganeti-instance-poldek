@@ -78,7 +78,7 @@ traceroute
 tzdata
 udev-core
 util-linux
-vim-
+vim
 vim-rt
 wget
 xfsprogs
