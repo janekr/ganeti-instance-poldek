@@ -2,7 +2,7 @@
 # PROXY=
 SUITE="th"
 # ARCH=
-# EXTRA_SOURCES="th-ready th-test"
+# REPOS="th th-ready th-test"
 INIT_STYLE="systemd"
 # EXTRA_PKGS=
 # COMPONENTS=

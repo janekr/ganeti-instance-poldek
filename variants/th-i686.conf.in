@@ -2,6 +2,8 @@
 # PROXY=
 SUITE="th"
 ARCH="i686"
+REPOS="th-${ARCH}"
+# REPOS="th-${ARCH} th-${ARCH}-ready th-${ARCH}-test"
 # EXTRA_PKGS=
 INIT_STYLE="systemd"
 # COMPONENTS=
