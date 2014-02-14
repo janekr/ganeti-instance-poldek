@@ -7,7 +7,7 @@
 
 # REPOS: list of packages repos to use for installation, default is "th"
 # WARNING: If you redefine REPOS, ARCH setting will be ignored.
-# could be th, th-ready, rh-test, etc.:
+# could be th, th-ready, th-test, etc.:
 # REPOS="th th-ready"
 
 # EXTRA_PKGS: extra packages not included in default list to install
