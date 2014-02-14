@@ -53,6 +53,7 @@ variants/th-i686.conf: variants/th-i686.conf.in
 install-exec-local:
 	@mkdir_p@ $(DESTDIR)$(variantsdir)
 	touch $(DESTDIR)$(variantsdir)/default.conf
+	@[ `uname -m` != "x86_64" ] && rm -f $(DESTDIR)$(variantsdir)/th-i686.conf
 	@mkdir_p@ $(DESTDIR)$(defaultsdir)
 	$(INSTALL_DATA) $(top_srcdir)/defaults \
 		$(DESTDIR)$(defaultsdir)/ganeti-instance-poldek
