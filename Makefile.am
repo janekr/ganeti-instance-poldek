@@ -27,10 +27,14 @@ dist_example_DATA = \
 	examples/hooks/timezone
 
 dist_variants_DATA = \
+	variants/th-2013.conf \
+	variants/th-2013-i686.conf \
 	variants/th.conf \
 	variants/th-i686.conf
 
 EXTRA_DIST = \
+	variants/th-2013.conf.in \
+	variants/th-2013-i686.conf.in \
 	variants/th.conf.in \
 	variants/th-i686.conf.in \
 	common.sh.in \
