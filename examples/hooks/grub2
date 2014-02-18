@@ -1,0 +1,45 @@
+#!/bin/bash
+#
+# This is an example script that install and configure grub after installation.
+# To use it put it in your CUSTOMIZE_DIR and make it executable.
+
+set -e
+
+. common.sh
+
+CLEANUP=( )
+
+trap cleanup EXIT
+
+if [ -z "$TARGET" -o ! -d "$TARGET" ]; then
+  echo "Missing target directory"
+  exit 1
+fi
+
+# install grub
+export LANG=C
+if [ "$PROXY" ]; then
+  export http_proxy="$PROXY"
+  export https_proxy="$PROXY"
+fi
+chroot "$TARGET" poldek -uGv grub2 grub2-platform-pc grub2-platform-efi
+
+# make /dev/sda
+mknod $TARGET/dev/sda b $(stat -L -c "0x%t 0x%T" $BLOCKDEV)
+CLEANUP+=("rm -f $TARGET/dev/sda")
+
+# make /dev/sda1
+mknod $TARGET/dev/sda1 b $(stat -L -c "0x%t 0x%T" $FSYSDEV)
+CLEANUP+=("rm -f $TARGET/dev/sda1")
+
+# execute update-grub
+chroot "$TARGET" update-grub
+
+# install grub to the block device
+root "$TARGET" grub-install /dev/sda
+
+# execute cleanups
+cleanup
+trap - EXIT
+
+exit 0
