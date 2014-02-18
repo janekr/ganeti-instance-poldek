@@ -4,9 +4,7 @@
 # or to the one of the host is none is configured.
 
 if [ -r confdata/timezone ]; then
-  cp confdata/timezone $TARGET/etc/
+	cp confdata/timezone $TARGET/etc/
 else
-  cp /etc/timezone $TARGET/etc/
+	cp /etc/timezone $TARGET/etc/
 fi
-
-chroot $TARGET dpkg-reconfigure --frontend noninteractive tzdata
