@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/bin/sh
 
 if [ -z "$TARGET" -o ! -d "$TARGET" ]; then
-  echo "Missing target directory"
-  exit 1
+	echo "Missing target directory"
+	exit 1
 fi
 
 # user to give access to. can be hardcoded or fetched from some other place
@@ -10,9 +10,11 @@ fi
 # keytype: rsa or dsa
 : ${KEYTYPE:="rsa"}
 
-if [ -f /home/$USER/.ssh/id_$KEYTYPE.pub ]; then
-  install -D -m 0700 -o root -g root \
-    /home/$USER/.ssh/id_$KEYTYPE.pub $TARGET/root/.ssh/authorized_keys
+USERHOME="$(eval echo ~$USER)"
+
+if [ -f $USERHOME/.ssh/id_$KEYTYPE.pub ]; then
+	install -D -m 0700 -o root -g root \
+		$USERHOME/.ssh/id_$KEYTYPE.pub $TARGET/root/.ssh/authorized_keys
 fi
 
 exit 0
