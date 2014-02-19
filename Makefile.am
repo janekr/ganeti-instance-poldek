@@ -50,18 +50,21 @@ common.sh: common.sh.in Makefile
 variants/%.conf: variants/%.conf.in
 	$(do_subst) < $< > $@
 
-install-exec-local:
+install-data-hook:
 	@mkdir_p@ $(DESTDIR)$(variantsdir)
 	touch $(DESTDIR)$(variantsdir)/default.conf
 	@if [ `uname -m` != "x86_64" ]; then\
 		rm -f $(DESTDIR)$(variantsdir)/th-i686.conf;\
 		rm -f $(DESTDIR)$(variantsdir)/th-2013-i686.conf;\
+	else\
+		echo "th-i686" >>$(DESTDIR)$(osdir)/variants.list;\
+		echo "th-2013-i686" >>$(DESTDIR)$(osdir)/variants.list;\
 	fi
 	@mkdir_p@ $(DESTDIR)$(defaultsdir)
 	$(INSTALL_DATA) $(top_srcdir)/defaults \
 		$(DESTDIR)$(defaultsdir)/ganeti-instance-poldek
 
-uninstall-local:
+uninstall-data-hook:
 	rm -f $(DESTDIR)$(variantsdir)/default.conf
 	rm -f $(DESTDIR)$(variantsdir)/th.conf
 	rm -f $(DESTDIR)$(variantsdir)/th-i686.conf
