@@ -25,7 +25,7 @@ dist_example_DATA = \
 	examples/hooks/ssh-keys \
 	examples/hooks/timezone
 
-dist_variants_DATA = \
+variants_DATA = \
 	variants/th-2013.conf \
 	variants/th-2013-i686.conf \
 	variants/th.conf \
