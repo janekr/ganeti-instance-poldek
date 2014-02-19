@@ -30,7 +30,8 @@ if [ "$GENERATE_CACHE" = "yes" -a ! -d "$CACHE_DIR" ]; then
 fi
 
 _INIT=${INIT_STYLE:-sysvinit}
-CACHE_FILE="$CACHE_DIR/cache-${SUITE}-${_INIT}-${ARCH:-`uname -m`}.tar"
+_REPOS=$(echo "$REPOS" | sha1sum 2>/dev/null | cut -c 1-8 2>/dev/null)
+CACHE_FILE="$CACHE_DIR/cache-${SUITE}-${_INIT}-${ARCH:-`uname -m`}-R${_REPOS}.tar"
 
 # If the target device is not a real block device we'll first losetup it.
 # This is needed for file disks.
