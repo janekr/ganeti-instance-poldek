@@ -9,7 +9,7 @@ dist_os_DATA = ganeti_api_version variants.list parameters.list \
 	       packages.list packages.systemd.list packages.sysvinit.list
 os_DATA = common.sh
 
-dist_doc_DATA = COPYING NEWS README
+dist_doc_DATA = COPYING README
 
 exampledir = $(docdir)/examples
 exampleconfdir = $(exampledir)/confdata
