@@ -29,7 +29,8 @@ if [ "$GENERATE_CACHE" = "yes" -a ! -d "$CACHE_DIR" ]; then
 	mkdir -p "$CACHE_DIR"
 fi
 
-CACHE_FILE="$CACHE_DIR/cache-${SUITE}-${ARCH:-`uname -m`}.tar"
+_INIT=${INIT_STYLE:-sysvinit}
+CACHE_FILE="$CACHE_DIR/cache-${SUITE}-${_INIT}-${ARCH:-`uname -m`}.tar"
 
 # If the target device is not a real block device we'll first losetup it.
 # This is needed for file disks.
@@ -103,7 +104,6 @@ else
 			_SRCS="$_SRCS -n $s"
 		done
 	fi
-	_INIT=${INIT_STYLE:-sysvinit}
 	rpm --root=$TMPDIR --initdb
 	poldek $_SRCS --up
 	poldek $_SRCS -iGv --noask --root=$TMPDIR \
