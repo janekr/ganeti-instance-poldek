@@ -64,7 +64,7 @@ install-data-hook:
 	$(INSTALL_DATA) $(top_srcdir)/defaults \
 		$(DESTDIR)$(defaultsdir)/ganeti-instance-poldek
 
-uninstall-data-hook:
+uninstall-hook:
 	rm -f $(DESTDIR)$(variantsdir)/default.conf
 	rm -f $(DESTDIR)$(variantsdir)/th.conf
 	rm -f $(DESTDIR)$(variantsdir)/th-i686.conf
