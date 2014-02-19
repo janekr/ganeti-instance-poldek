@@ -47,16 +47,16 @@ common.sh: common.sh.in Makefile
 	$(do_subst) < $< > $@
 	chmod +x $@
 
-variants/th.conf: variants/th.conf.in
-	$(do_subst) < $< > $@
-
-variants/th-i686.conf: variants/th-i686.conf.in
+variants/%.conf: variants/%.conf.in
 	$(do_subst) < $< > $@
 
 install-exec-local:
 	@mkdir_p@ $(DESTDIR)$(variantsdir)
 	touch $(DESTDIR)$(variantsdir)/default.conf
-	@[ `uname -m` != "x86_64" ] && rm -f $(DESTDIR)$(variantsdir)/th-i686.conf
+	@if [ `uname -m` != "x86_64" ]; then\
+		rm -f $(DESTDIR)$(variantsdir)/th-i686.conf;\
+		rm -f $(DESTDIR)$(variantsdir)/th-2013-i686.conf;\
+	fi
 	@mkdir_p@ $(DESTDIR)$(defaultsdir)
 	$(INSTALL_DATA) $(top_srcdir)/defaults \
 		$(DESTDIR)$(defaultsdir)/ganeti-instance-poldek
@@ -65,6 +65,8 @@ uninstall-local:
 	rm -f $(DESTDIR)$(variantsdir)/default.conf
 	rm -f $(DESTDIR)$(variantsdir)/th.conf
 	rm -f $(DESTDIR)$(variantsdir)/th-i686.conf
+	rm -f $(DESTDIR)$(variantsdir)/th-2013.conf
+	rm -f $(DESTDIR)$(variantsdir)/th-2013-i686.conf
 	rm -f $(DESTDIR)$(defaultsdir)/ganeti-instance-poldek
 
 CLEANFILES = common.sh
