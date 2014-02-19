@@ -20,9 +20,8 @@ dist_exampleconf_DATA = \
 
 dist_example_DATA = \
 	examples/hooks/defaultpasswords \
-	examples/hooks/grub \
+	examples/hooks/grub2 \
 	examples/hooks/hosts \
-	examples/hooks/interfaces \
 	examples/hooks/ssh-keys \
 	examples/hooks/timezone
 
