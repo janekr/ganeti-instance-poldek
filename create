@@ -108,8 +108,8 @@ else
 	rpm --root=$TMPDIR --initdb
 	poldek $_SRCS --up
 	poldek $_SRCS -iGv --noask --root=$TMPDIR \
-		--pset=required \
-		--pset=required.$_INIT \
+		--pset=packages.list \
+		--pset=packages.${_INIT}.list \
 		$EXTRA_PKGS
 
 	if [ "$GENERATE_CACHE" = "yes" ]; then
