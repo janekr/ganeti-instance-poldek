@@ -136,7 +136,7 @@ else
 fi
 
 # reset the root password
-chroot $TMPDIR /bin/sh -c 'echo "root:pld" | chpasswd -c md5'
+echo "root:pld" | chroot $TMPDIR chpasswd -c md5
 
 cp -p /etc/resolv.conf $TMPDIR/etc/resolv.conf
 echo $instance > $TMPDIR/etc/hostname
