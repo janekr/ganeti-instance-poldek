@@ -105,6 +105,22 @@ else
 			_SRCS="$_SRCS -n $s"
 		done
 	fi
+	# create basic set of devices for chrooted install
+	mkdir -m 755 $TMPDIR/dev
+	mkdir -m 1777 $TMPDIR/dev/shm
+	mknod -m 666 $TMPDIR/dev/null    c 1 3
+	mknod -m 666 $TMPDIR/dev/zero    c 1 5
+	mknod -m 666 $TMPDIR/dev/full    c 1 7
+	mknod -m 666 $TMPDIR/dev/ptmx    c 5 2
+	mknod -m 644 $TMPDIR/dev/random  c 1 8
+	mknod -m 644 $TMPDIR/dev/urandom c 1 9
+	mknod -m 666 $TMPDIR/dev/tty     c 5 0
+	mknod -m 660 $TMPDIR/dev/tty0    c 4 0
+	ln -s /proc/self/fd $TMPDIR/dev/fd
+	ln -s fd/0 $TMPDIR/dev/stdin
+	ln -s fd/1 $TMPDIR/dev/stdout
+	ln -s fd/2 $TMPDIR/dev/stderr
+
 	rpm --root=$TMPDIR --initdb
 	poldek $_SRCS --up
 	poldek $_SRCS -iGv --noask --root=$TMPDIR \
