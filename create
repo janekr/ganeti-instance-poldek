@@ -195,6 +195,16 @@ if [ -n "$SERIAL_PORT" ]; then
 	# systemd will take care of this with systemd-getty-generator
 fi
 
+if [ -f $TMPDIR/etc/syslog-ng/syslog-ng.conf ]; then
+	if [ ${_INIT} = "systemd" ]; then
+		sed -i -e 's|.*unix-.*("/dev/log".*|#&|' $TMPDIR/etc/syslog-ng/syslog-ng.conf
+		sed -i -e 's|#\+\(.*unix-.*("/run/systemd/journal/syslog".*\)|\1|' $TMPDIR/etc/syslog-ng/syslog-ng.conf
+	else
+		sed -i -e 's|#\+\(.*unix-.*("/dev/log".*\)|\1|' $TMPDIR/etc/syslog-ng/syslog-ng.conf
+		sed -i -e 's|.*unix-.*("/run/systemd/journal/syslog".*\)|#&|' $TMPDIR/etc/syslog-ng/syslog-ng.conf
+	fi
+fi
+
 RUN_PARTS=`which run-parts`
 
 if [ -n "$RUN_PARTS" -a -n "$CUSTOMIZE_DIR" -a -d "$CUSTOMIZE_DIR" ]; then
