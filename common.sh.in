@@ -135,9 +135,6 @@ if [ -f "$DEFAULT_FILE" ]; then
     . "$DEFAULT_FILE"
 fi
 
-# note: we don't set a default mirror since debian and ubuntu have
-# different defaults, and it's better to use the default
-
 # only if the user want to specify a mirror in the defaults file we
 # will use it, this declaration is to make sure the variable is set
 : ${MIRROR:=""}
