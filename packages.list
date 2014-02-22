@@ -44,6 +44,7 @@ libselinux
 libstdc++
 login
 logrotate
+lsof
 lvm2
 mailx
 man-db
