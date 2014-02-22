@@ -128,6 +128,21 @@ else
 		--pset=packages.${_INIT}.list \
 		$EXTRA_PKGS
 
+	# PLD initrd/initramfs may not contain all required XEN kernel modules
+	# we need to copy /lib/modules/<kernel_ver> directory for the kernel
+	# used to start the PVM guest
+	if [ $HYPERVISOR = "xen-pvm" -a -n "$kernel_ver" ]; then
+		if [ -d /lib/modules/$kernel_ver ]; then
+			cp -a /lib/modules/$kernel_ver $TMPDIR/lib/modules/
+		else
+			# ...or try to install the package if modules are not present on host
+			kpkg=$(poldek $_SRCS -q --cmd "what-provides kernel*(vermagic)" | grep $kernel_ver)
+			if [ -n "$kpkg" ]; then
+				poldek $_SRCS -iGv --noask --root=$TMPDIR --pmop noscripts $kpkg || :
+			fi
+		fi
+	fi
+
 	if [ "$GENERATE_CACHE" = "yes" ]; then
 		TMP_CACHE=`mktemp "${CACHE_FILE}.XXXXXX"`
 		tar cf "$TMP_CACHE" -C $TMPDIR .
