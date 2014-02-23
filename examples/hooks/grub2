@@ -22,21 +22,35 @@ if [ "$PROXY" ]; then
 	export http_proxy="$PROXY"
 	export https_proxy="$PROXY"
 fi
-chroot "$TARGET" poldek -uGv grub2 grub2-platform-pc grub2-platform-efi
 
-# make /dev/sda
-mknod $TARGET/dev/sda b $(stat -L -c "0x%t 0x%T" $BLOCKDEV)
-CLEANUP+=("rm -f $TARGET/dev/sda")
+if [ -n "$ARCH" ]; then
+	_SRCS="-n th-$ARCH"
+else
+	_SRCS=
+	for s in ${REPOS:-th}; do
+		_SRCS="$_SRCS -n $s"
+	done
+fi
+poldek $_SRCS -iGv --noask --root=$TARGET grub2 grub2-platform-pc
 
-# make /dev/sda1
-mknod $TARGET/dev/sda1 b $(stat -L -c "0x%t 0x%T" $FSYSDEV)
-CLEANUP+=("rm -f $TARGET/dev/sda1")
+# fool grub autodetecion fails on LVM
+LOOPDEV=$(losetup --show -f $BLOCKDEV)
+CLEANUP+=("losetup -d $LOOPDEV")
+
+mount --bind /dev $TARGET/dev
+CLEANUP+=("umount $TARGET/dev")
+
+mount --bind /proc $TARGET/proc
+CLEANUP+=("umount $TARGET/proc")
+
+mount --bind /sys $TARGET/sys
+CLEANUP+=("umount $TARGET/sys")
 
 # execute update-grub
 chroot "$TARGET" update-grub
 
 # install grub to the block device
-root "$TARGET" grub-install /dev/sda
+chroot "$TARGET" grub-install $LOOPDEV
 
 # execute cleanups
 cleanup
