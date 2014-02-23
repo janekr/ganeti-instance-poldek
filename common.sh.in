@@ -220,14 +220,3 @@ if [ -n "$OS_VARIANT" ]; then
 		exit 1
 	fi
 fi
-
-if [ $HYPERVISOR = "xen-pvm" ]; then
-	# Extract kernel version from vmlinuz image
-	# that will be used to start the PVM guest
-	_where=$(od -j 526 -N 2 -A n -d $INSTANCE_HV_kernel_path)
-	_where=$(($_where + 512))
-	kernel_ver=$(dd if=$INSTANCE_HV_kernel_path bs=1 skip=$_where count=128 2>/dev/null | cut -f 1 -d ' ')
-elif [ $HYPERVISOR = "xen-hvm" -o $HYPERVISOR = "kvm" ]; then
-	# make sure we have kernel and bootloader in KVM and Xen HVM guests
-	EXTRA_PKGS="$EXTRA_PKGS kernel dracut grub2 grub2-platform-pc"
-fi

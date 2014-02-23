@@ -122,6 +122,11 @@ else
 	ln -s fd/1 $TMPDIR/dev/stdout
 	ln -s fd/2 $TMPDIR/dev/stderr
 
+	if [ $HYPERVISOR = "xen-hvm" -o $HYPERVISOR = "kvm" ]; then
+		# make sure we have kernel and bootloader in HVM guest
+		EXTRA_PKGS="$EXTRA_PKGS kernel grub2 grub2-platform-pc dracut"
+	fi
+
 	rpm --root=$TMPDIR --initdb
 	poldek $_SRCS --up
 	poldek $_SRCS -iGv --noask --root=$TMPDIR \
@@ -134,13 +139,21 @@ else
 	# we need to copy /lib/modules/<kernel_ver> directory for the kernel
 	# used to start the PVM guest
 	if [ $HYPERVISOR = "xen-pvm" -a -n "$kernel_ver" ]; then
-		if [ -d /lib/modules/$kernel_ver ]; then
-			cp -a /lib/modules/$kernel_ver $TMPDIR/lib/modules/
-		else
-			# ...or try to install the package if modules are not present on host
-			kpkg=$(poldek $_SRCS -q --cmd "what-provides kernel*(vermagic)" | grep $kernel_ver)
-			if [ -n "$kpkg" ]; then
-				poldek $_SRCS -iGv --noask --root=$TMPDIR --pmcmd=/bin/rpm --pmop noscripts $kpkg || :
+		# Extract kernel version from vmlinuz image
+		# that will be used to start the PVM guest
+		_where=$(od -j 526 -N 2 -A n -d $INSTANCE_HV_kernel_path)
+		_where=$(($_where + 512))
+		kernel_ver=$(dd if=$INSTANCE_HV_kernel_path bs=1 skip=$_where count=128 2>/dev/null | cut -f 1 -d ' ')
+
+		if [ -n "$kernel_ver" ]; then
+			if [ -d /lib/modules/$kernel_ver ]; then
+				cp -a /lib/modules/$kernel_ver $TMPDIR/lib/modules/
+			else
+				# ...or try to install the package if modules are not present on host
+				kpkg=$(poldek $_SRCS -q --cmd "what-provides kernel*(vermagic)" | grep $kernel_ver)
+				if [ -n "$kpkg" ]; then
+					poldek $_SRCS -iGv --noask --root=$TMPDIR --pmcmd=/bin/rpm --pmop noscripts $kpkg || :
+				fi
 			fi
 		fi
 	fi
