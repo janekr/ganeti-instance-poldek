@@ -1,5 +1,5 @@
 AC_PREREQ(2.59)
-AC_INIT(ganeti-instance-poldek, 0.1, baggins@pld-linux.org)
+AC_INIT(ganeti-instance-poldek, 0.2, baggins@pld-linux.org)
 
 AC_CONFIG_SRCDIR(configure)
 
