@@ -203,7 +203,7 @@ if [ -f $TMPDIR/etc/syslog-ng/syslog-ng.conf ]; then
 		sed -i -e 's|#\+\(.*unix-.*("/run/systemd/journal/syslog".*\)|\1|' $TMPDIR/etc/syslog-ng/syslog-ng.conf
 	else
 		sed -i -e 's|#\+\(.*unix-.*("/dev/log".*\)|\1|' $TMPDIR/etc/syslog-ng/syslog-ng.conf
-		sed -i -e 's|.*unix-.*("/run/systemd/journal/syslog".*\)|#&|' $TMPDIR/etc/syslog-ng/syslog-ng.conf
+		sed -i -e 's|.*unix-.*("/run/systemd/journal/syslog".*|#&|' $TMPDIR/etc/syslog-ng/syslog-ng.conf
 	fi
 fi
 
