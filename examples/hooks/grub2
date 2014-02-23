@@ -12,15 +12,15 @@ CLEANUP=( )
 trap cleanup EXIT
 
 if [ -z "$TARGET" -o ! -d "$TARGET" ]; then
-  echo "Missing target directory"
-  exit 1
+	echo "Missing target directory"
+	exit 1
 fi
 
 # install grub
 export LANG=C
 if [ "$PROXY" ]; then
-  export http_proxy="$PROXY"
-  export https_proxy="$PROXY"
+	export http_proxy="$PROXY"
+	export https_proxy="$PROXY"
 fi
 chroot "$TARGET" poldek -uGv grub2 grub2-platform-pc grub2-platform-efi
 
