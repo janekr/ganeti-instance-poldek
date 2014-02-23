@@ -1,6 +1,7 @@
 osname=$(subst ganeti-instance-,,$(PACKAGE))
 
 osdir=$(OS_DIR)/$(osname)
+hooksdir=$(sysconfdir)/ganeti/instance-poldek/hooks
 variantsdir=$(sysconfdir)/ganeti/instance-poldek/variants
 defaultsdir=$(sysconfdir)/default
 
@@ -52,6 +53,7 @@ variants/%.conf: variants/%.conf.in
 
 install-data-hook:
 	@mkdir_p@ $(DESTDIR)$(variantsdir)
+	@mkdir_p@ $(DESTDIR)$(hooksdir)
 	touch $(DESTDIR)$(variantsdir)/default.conf
 	@if [ `uname -m` != "x86_64" ]; then\
 		rm -f $(DESTDIR)$(variantsdir)/th-i686.conf;\
