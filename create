@@ -125,6 +125,7 @@ else
 	rpm --root=$TMPDIR --initdb
 	poldek $_SRCS --up
 	poldek $_SRCS -iGv --noask --root=$TMPDIR \
+		--pmcmd=/bin/rpm \
 		--pset=packages.list \
 		--pset=packages.${_INIT}.list \
 		$EXTRA_PKGS
@@ -139,7 +140,7 @@ else
 			# ...or try to install the package if modules are not present on host
 			kpkg=$(poldek $_SRCS -q --cmd "what-provides kernel*(vermagic)" | grep $kernel_ver)
 			if [ -n "$kpkg" ]; then
-				poldek $_SRCS -iGv --noask --root=$TMPDIR --pmop noscripts $kpkg || :
+				poldek $_SRCS -iGv --noask --root=$TMPDIR --pmcmd=/bin/rpm --pmop noscripts $kpkg || :
 			fi
 		fi
 	fi
