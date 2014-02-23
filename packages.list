@@ -44,6 +44,7 @@ libselinux
 libstdc++
 login
 logrotate
+losetup
 lsof
 lvm2
 mailx
@@ -58,6 +59,7 @@ ncurses
 net-tools
 netcat-openbsd
 nss-softokn-freebl
+open
 openssl
 pam
 pam-libs
